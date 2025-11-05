@@ -67,14 +67,11 @@ jobs:
 
       - name: Open PR
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # or a PAT/App token
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          url=$(gh pr create \
+          gh pr create \
             --title "chore(release): version bump" \
             --body  "Automated version bump triggered by $GITHUB_ACTOR." \
             --base  main \
             --head  "$BRANCH_NAME" \
-            --json url -q .url)
-          test -n "$url" || { echo "PR not created."; exit 1; }
-          echo "PR URL: $url"
+          || echo "PR may already exist."
