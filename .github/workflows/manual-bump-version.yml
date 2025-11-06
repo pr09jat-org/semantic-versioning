@@ -1,5 +1,4 @@
-name: Bump Version
-
+name: Manual Version Bump
 on:
   workflow_dispatch:
     inputs:
