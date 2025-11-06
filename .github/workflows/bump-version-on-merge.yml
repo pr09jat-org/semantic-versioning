@@ -11,8 +11,8 @@ on:
         options: [major, minor, patch]
 
 permissions:
-  contents: write # push branch
-  pull-requests: write # create PR
+  contents: write
+  pull-requests: write
 
 jobs:
   bump:
@@ -26,9 +26,6 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: true
-          # keep default credentials so git push over GITHUB_TOKEN works
-
-      # (optional) your CODEOWNERS gate
       - name: Check if user is allowed (based on CODEOWNERS)
         run: |
           echo "🔍 Checking CODEOWNERS access for $GITHUB_ACTOR"
@@ -73,7 +70,7 @@ jobs:
           if gh pr create \
             --title "chore(release): version bump" \
             --body  "Automated version bump triggered by $GITHUB_ACTOR." \
-            --base  main \
+            --base  master \
             --head  "$BRANCH_NAME"
           then
             echo "✅ PR created successfully."
