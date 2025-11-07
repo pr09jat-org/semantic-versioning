@@ -54,12 +54,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ ! "${GITHUB_REF_NAME}" =~ ^release/sprint ]]; then
-            echo "🚫 Invalid branch. Only branches starting with 'release/sprint' are allowed."
-            echo "Ref name was: ${GITHUB_REF_NAME}"
+          REF="${GITHUB_REF_NAME}"
+
+          # Pattern: release/sprint-<digits> (any length, at least 1)
+          if [[ "$REF" =~ ^release/sprint-([0-9]+)$ ]]; then
+            SPRINT="${BASH_REMATCH[1]}"
+            echo "✅ Branch validated: ${REF} (sprint=${SPRINT})"
+            echo "sprint=${SPRINT}" >> "$GITHUB_ENV"
+          else
+            echo "🚫 Invalid branch: '${REF}'"
+            echo "   Expected: 'release/sprint-<digits>' e.g.:"
+            echo "   - release/sprint-1"
+            echo "   - release/sprint-12"
+            echo "   - release/sprint-202511"
             exit 1
           fi
-          echo "✅ Branch validated: ${GITHUB_REF_NAME}"
 
       - name: Extract version from file
         id: version
